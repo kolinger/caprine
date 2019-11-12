@@ -11,7 +11,8 @@ import {
 	Menu,
 	Notification,
 	MenuItemConstructorOptions,
-	Event as ElectronEvent
+	Event as ElectronEvent,
+	MenuItem, ContextMenuParams
 } from 'electron';
 import log from 'electron-log';
 import {autoUpdater} from 'electron-updater';
@@ -41,16 +42,30 @@ electronDebug({
 
 electronDl();
 electronContextMenu({
-	prepend: defaultActions => {
+	prepend: (_defaultActions: electronContextMenu.Actions, params: ContextMenuParams) => {
 		/*
 		TODO: Use menu option or use replacement of options (https://github.com/sindresorhus/electron-context-menu/issues/70)
 		See explanation for this hacky solution here: https://github.com/sindresorhus/caprine/pull/1169
 		*/
-		defaultActions.copyLink({
+		_defaultActions.copyLink({
 			transform: stripTrackingFromUrl
 		});
-
-		return [];
+		return [
+			new MenuItem({
+				label: 'Open in browser',
+				visible: !!params.srcURL,
+				click() {
+					shell.openExternal(params.srcURL);
+				}
+			}),
+			new MenuItem({
+				label: 'Open in browser',
+				visible: !!params.linkURL,
+				click() {
+					shell.openExternal(params.linkURL);
+				}
+			})
+		];
 	}
 });
 
