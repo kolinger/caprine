@@ -2,7 +2,6 @@ import * as path from 'path';
 import {readFileSync, existsSync} from 'fs';
 import {
 	app,
-	ipcMain,
 	nativeImage,
 	screen as electronScreen,
 	session,
@@ -11,9 +10,9 @@ import {
 	Menu,
 	Notification,
 	MenuItemConstructorOptions,
-	Event as ElectronEvent,
-	MenuItem, ContextMenuParams
+	systemPreferences
 } from 'electron';
+import {ipcMain} from 'electron-better-ipc';
 import log from 'electron-log';
 import {autoUpdater} from 'electron-updater';
 import electronDl = require('electron-dl');
@@ -31,6 +30,8 @@ import {process as processEmojiUrl} from './emoji';
 import ensureOnline from './ensure-online';
 import {setUpMenuBarMode} from './menu-bar-mode';
 import {caprineIconPath} from './constants';
+import {Actions} from "electron-context-menu";
+import ContextMenuParams = Electron.ContextMenuParams;
 
 ipcMain.setMaxListeners(100);
 
@@ -41,29 +42,29 @@ electronDebug({
 
 electronDl();
 electronContextMenu({
-	prepend: (_defaultActions: electronContextMenu.Actions, params: ContextMenuParams) => {
+	prepend: (defaultActions: Actions, params: ContextMenuParams) => {
 		/*
 		TODO: Use menu option or use replacement of options (https://github.com/sindresorhus/electron-context-menu/issues/70)
 		See explanation for this hacky solution here: https://github.com/sindresorhus/caprine/pull/1169
 		*/
-		_defaultActions.copyLink({
+		defaultActions.copyLink({
 			transform: stripTrackingFromUrl
 		});
 		return [
-			new MenuItem({
+			{
 				label: 'Open in browser',
 				visible: !!params.srcURL,
 				click() {
 					shell.openExternal(params.srcURL);
 				}
-			}),
-			new MenuItem({
+			},
+			{
 				label: 'Open in browser',
 				visible: !!params.linkURL,
 				click() {
 					shell.openExternal(params.linkURL);
 				}
-			})
+			}
 		];
 	}
 });
@@ -108,11 +109,19 @@ app.on('second-instance', () => {
 	}
 });
 
+// Preserves the window position when a display is removed and Caprine is moved to a different screen.
+app.on('ready', () => {
+	electronScreen.on('display-removed', () => {
+		const [x, y] = mainWindow.getPosition();
+		mainWindow.setPosition(x, y);
+	});
+});
+
 function getMessageCount(conversations: Conversation[]): number {
 	return conversations.filter(({unread}) => unread).length;
 }
 
-function updateBadge(conversations: Conversation[]): void {
+async function updateBadge(conversations: Conversation[]): Promise<void> {
 	// Ignore `Sindre messaged you` blinking
 	if (!Array.isArray(conversations)) {
 		return;
@@ -154,16 +163,16 @@ function updateBadge(conversations: Conversation[]): void {
 				mainWindow.setOverlayIcon(null, '');
 			} else {
 				// Delegate drawing of overlay icon to renderer process
-				mainWindow.webContents.send('render-overlay-icon', messageCount);
+				updateOverlayIcon(await ipcMain.callRenderer(mainWindow, 'render-overlay-icon', messageCount));
 			}
 		}
 	}
 }
 
-ipcMain.on('update-overlay-icon', (_event: ElectronEvent, data: string, text: string) => {
+function updateOverlayIcon({data, text}: {data: string; text: string}): void {
 	const img = nativeImage.createFromDataURL(data);
 	mainWindow.setOverlayIcon(img, text);
-});
+}
 
 function updateTrayIcon(): void {
 	if (!config.get('showTrayIcon') || config.get('quitOnWindowClose')) {
@@ -173,7 +182,7 @@ function updateTrayIcon(): void {
 	}
 }
 
-ipcMain.on('update-tray-icon', updateTrayIcon);
+ipcMain.answerRenderer('update-tray-icon', updateTrayIcon);
 
 interface BeforeSendHeadersResponse {
 	cancel?: boolean;
@@ -248,6 +257,20 @@ function initRequestsFiltering(): void {
 			callback({cancel: config.get('block.deliveryReceipt' as any)});
 		}
 	});
+
+	session.defaultSession.webRequest.onHeadersReceived({
+		urls: ['*://static.xx.fbcdn.net/rsrc.php/*']
+	}, ({responseHeaders}, callback) => {
+		if (!config.get('callRingtoneMuted') || !responseHeaders) {
+			callback({});
+			return;
+		}
+
+		const callRingtoneHash = '2NAu/QVqg211BbktgY5GkA==';
+		callback({
+			cancel: responseHeaders['content-md5'][0] === callRingtoneHash
+		});
+	});
 }
 
 function setUserLocale(): void {
@@ -255,6 +278,7 @@ function setUserLocale(): void {
 	const cookie = {
 		url: 'https://www.messenger.com/',
 		name: 'locale',
+		secure: true,
 		value: userLocale
 	};
 
@@ -299,6 +323,7 @@ function createMainWindow(): BrowserWindow {
 		darkTheme: isDarkMode, // GTK+3
 		webPreferences: {
 			preload: path.join(__dirname, 'browser.js'),
+			nativeWindowOpen: true,
 			contextIsolation: true,
 			plugins: true
 		}
@@ -359,7 +384,18 @@ function createMainWindow(): BrowserWindow {
 	});
 
 	win.on('resize', () => {
-		config.set('lastWindowState', win.getNormalBounds());
+		const {isMaximized} = config.get('lastWindowState');
+		config.set('lastWindowState', {...win.getNormalBounds(), isMaximized});
+	});
+
+	win.on('maximize', () => {
+		// @ts-ignore
+		config.set('lastWindowState.isMaximized', true);
+	});
+
+	win.on('unmaximize', () => {
+		// @ts-ignore
+		config.set('lastWindowState.isMaximized', false);
 	});
 
 	return win;
@@ -383,8 +419,8 @@ function createMainWindow(): BrowserWindow {
 			label: 'Mute Notifications',
 			type: 'checkbox',
 			checked: config.get('notificationsMuted'),
-			click() {
-				mainWindow.webContents.send('toggle-mute-notifications');
+			async click() {
+				setNotificationsMute(await ipcMain.callRenderer(mainWindow, 'toggle-mute-notifications'));
 			}
 		};
 
@@ -402,7 +438,7 @@ function createMainWindow(): BrowserWindow {
 			sendAction('jump-to-conversation', 1);
 		});
 
-		ipcMain.on('conversations', (_event: ElectronEvent, conversations: Conversation[]) => {
+		ipcMain.answerRenderer('conversations', (conversations: Conversation[]) => {
 			if (conversations.length === 0) {
 				return;
 			}
@@ -423,7 +459,7 @@ function createMainWindow(): BrowserWindow {
 	}
 
 	// Update badge on conversations change
-	ipcMain.on('conversations', (_event: ElectronEvent, conversations: Conversation[]) => {
+	ipcMain.answerRenderer('conversations', async (conversations: Conversation[]) => {
 		updateBadge(conversations);
 	});
 
@@ -456,24 +492,28 @@ function createMainWindow(): BrowserWindow {
 			mainWindow.hide();
 			tray.create(mainWindow);
 		} else {
+			if (config.get('lastWindowState').isMaximized) {
+				mainWindow.maximize();
+			}
+
 			mainWindow.show();
 		}
 
 		if (is.macos) {
-			ipcMain.on('update-dnd-mode', async (_event: ElectronEvent, initialSoundsValue) => {
+			ipcMain.answerRenderer('update-dnd-mode', async (initialSoundsValue: boolean) => {
 				doNotDisturb.on('change', (doNotDisturb: boolean) => {
 					isDNDEnabled = doNotDisturb;
-					webContents.send('toggle-sounds', isDNDEnabled ? false : initialSoundsValue);
+					ipcMain.callRenderer(mainWindow, 'toggle-sounds', isDNDEnabled ? false : initialSoundsValue);
 				});
 
 				isDNDEnabled = await doNotDisturb.isEnabled();
 
-				webContents.send('toggle-sounds', isDNDEnabled ? false : initialSoundsValue);
+				return isDNDEnabled ? false : initialSoundsValue;
 			});
 		}
 
-		webContents.send('toggle-mute-notifications', config.get('notificationsMuted'));
-		webContents.send('toggle-message-buttons', config.get('showMessageButtons'));
+		setNotificationsMute(await ipcMain.callRenderer(mainWindow, 'toggle-mute-notifications', config.get('notificationsMuted')));
+		ipcMain.callRenderer(mainWindow, 'toggle-message-buttons', config.get('showMessageButtons'));
 
 		await webContents.executeJavaScript(
 			readFileSync(path.join(__dirname, 'notifications-isolated.js'), 'utf8')
@@ -487,7 +527,7 @@ function createMainWindow(): BrowserWindow {
 	webContents.on('new-window', async (event: Event, url, frameName, _disposition, options) => {
 		event.preventDefault();
 
-		if (url === 'about:blank') {
+		if (url === 'about:blank' || url === 'about:blank#blocked') {
 			if (frameName !== 'about:blank') {
 				// Voice/video call popup
 				options.show = true;
@@ -547,14 +587,32 @@ function createMainWindow(): BrowserWindow {
 })();
 
 if (is.macos) {
-	ipcMain.on('set-vibrancy', () => {
+	ipcMain.answerRenderer('set-vibrancy', () => {
 		mainWindow.setBackgroundColor('#80FFFFFF'); // Transparent, workaround for vibrancy issue.
 		mainWindow.setVibrancy('sidebar');
 	});
 }
 
-ipcMain.on('mute-notifications-toggled', (_event: ElectronEvent, status: boolean) => {
-	setNotificationsMute(status);
+function toggleMaximized(): void {
+	if (mainWindow.isMaximized()) {
+		mainWindow.unmaximize();
+	} else {
+		mainWindow.maximize();
+	}
+}
+
+ipcMain.answerRenderer('titlebar-doubleclick', () => {
+	if (is.macos) {
+		const doubleClickAction = systemPreferences.getUserDefault('AppleActionOnDoubleClick', 'string');
+
+		if (doubleClickAction === 'Minimize') {
+			mainWindow.minimize();
+		} else if (doubleClickAction === 'Maximize') {
+			toggleMaximized();
+		}
+	} else {
+		toggleMaximized();
+	}
 });
 
 app.on('activate', () => {
@@ -569,15 +627,16 @@ app.on('before-quit', () => {
 	// Checking whether the window exists to work around an Electron race issue:
 	// https://github.com/sindresorhus/caprine/issues/809
 	if (mainWindow) {
-		config.set('lastWindowState', mainWindow.getNormalBounds());
+		const {isMaximized} = config.get('lastWindowState');
+		config.set('lastWindowState', {...mainWindow.getNormalBounds(), isMaximized});
 	}
 });
 
 const notifications = new Map();
 
-ipcMain.on(
+ipcMain.answerRenderer(
 	'notification',
-	(_event: ElectronEvent, {id, title, body, icon, silent}: NotificationEvent) => {
+	({id, title, body, icon, silent}: {id: number; title: string; body: string; icon: string; silent: boolean}) => {
 		const notification = new Notification({
 			title,
 			body: config.get('notificationMessagePreview') ? body : 'You have a new message',

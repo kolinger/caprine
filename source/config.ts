@@ -5,6 +5,7 @@ type StoreType = {
 	followSystemAppearance: boolean;
 	darkMode: boolean;
 	privateMode: boolean;
+	showPrivateModePrompt: boolean;
 	vibrancy: 'none' | 'sidebar' | 'full';
 	zoomFactor: number;
 	lastWindowState: {
@@ -12,6 +13,7 @@ type StoreType = {
 		y: number;
 		width: number;
 		height: number;
+		isMaximized: boolean;
 	};
 	menuBarMode: boolean;
 	showDockIcon: boolean;
@@ -33,6 +35,7 @@ type StoreType = {
 	sidebar: 'default' | 'hidden' | 'narrow' | 'wide';
 	autoHideMenuBar: boolean;
 	notificationsMuted: boolean;
+	callRingtoneMuted: boolean;
 	hardwareAcceleration: boolean;
 	quitOnWindowClose: boolean;
 	keepMeSignedIn: boolean;
@@ -51,6 +54,10 @@ const schema: {[Key in keyof StoreType]: Store.Schema} = {
 	privateMode: {
 		type: 'boolean',
 		default: false
+	},
+	showPrivateModePrompt: {
+		type: 'boolean',
+		default: true
 	},
 	vibrancy: {
 		type: 'string',
@@ -77,13 +84,17 @@ const schema: {[Key in keyof StoreType]: Store.Schema} = {
 			},
 			height: {
 				type: 'number'
+			},
+			isMaximized: {
+				type: 'boolean'
 			}
 		},
 		default: {
 			x: undefined,
 			y: undefined,
 			width: 800,
-			height: 600
+			height: 600,
+			isMaximized: false
 		}
 	},
 	menuBarMode: {
@@ -166,6 +177,10 @@ const schema: {[Key in keyof StoreType]: Store.Schema} = {
 		type: 'boolean',
 		default: false
 	},
+	callRingtoneMuted: {
+		type: 'boolean',
+		default: false
+	},
 	hardwareAcceleration: {
 		type: 'boolean',
 		default: true
@@ -199,7 +214,8 @@ function updateVibrancySetting(store: Store): void {
 function updateSidebarSetting(store: Store): void {
 	if (store.get('sidebarHidden')) {
 		store.set('sidebar', 'hidden');
-	} else {
+		store.delete('sidebarHidden');
+	} else if (!store.has('sidebar')) {
 		store.set('sidebar', 'default');
 	}
 }
