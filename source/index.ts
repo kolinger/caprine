@@ -376,6 +376,12 @@ function createMainWindow(): BrowserWindow {
 		}
 	});
 
+	win.on('app-command', (_event, command) => {
+		if (command === 'close') {
+			app.quit();
+		}
+	});
+
 	win.on('focus', () => {
 		if (config.get('flashWindowOnMessage')) {
 			// This is a security in the case where messageCount is not reset by page title update
