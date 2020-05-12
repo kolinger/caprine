@@ -4,6 +4,8 @@
 
 Caprine is an unofficial and privacy-focused Facebook Messenger app with many useful features.
 
+**Caprine is feature complete. However, we welcome contributions for improvements and bug fixes.**
+
 **[Website](https://sindresorhus.com/caprine)**
 
 <br>
@@ -148,6 +150,12 @@ Note that you can change the behavior of Caprine so that the app closes when the
 ### Touch Bar support *(macOS only)*
 
 <img src="media/screenshot-touchbar.png" width="1085">
+
+### Custom languages for spell-check *(Not for macOS)*
+
+Users can select supported languages from `Conversation` → `Spell Checker Language`.
+
+macOS detects the language automatically.
 
 ### Custom styles
 
