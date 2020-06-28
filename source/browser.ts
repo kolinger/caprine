@@ -267,7 +267,7 @@ ipc.answerMain('toggle-video-autoplay', () => {
 
 ipc.answerMain('reload', () => {
 	location.reload();
-})
+});
 
 function setDarkMode(): void {
 	if (is.macos && config.get('followSystemAppearance')) {
@@ -542,6 +542,58 @@ function insertionListener(event: AnimationEvent): void {
 	}
 }
 
+async function observeAutoscroll(): Promise<void> {
+	const mainElement = await elementReady<HTMLElement>('._4sp8', {stopOnDomReady: false});
+	if (!mainElement) {
+		return;
+	}
+
+	const scrollToBottom = (): void => {
+		const scrollableElement: HTMLElement | null = document.querySelector('[role=presentation] .scrollable');
+		if (scrollableElement) {
+			scrollableElement.scroll({
+				top: Number.MAX_SAFE_INTEGER,
+				behavior: 'smooth'
+			});
+		}
+	};
+
+	const hookMessageObserver = async (): Promise<void> => {
+		const chatElement = await elementReady<HTMLElement>(
+			'[role=presentation] .scrollable [role = region] > div[id ^= "js_"]', {stopOnDomReady: false}
+		);
+
+		if (chatElement) {
+			// Scroll to the bottom when opening different conversation
+			scrollToBottom();
+
+			const messageObserver = new MutationObserver((record: MutationRecord[]) => {
+				const newMessages: MutationRecord[] = record.filter(record => {
+					// The mutation is an addition
+					return record.addedNodes.length > 0 &&
+						// ... of a div       (skip the "seen" status change)
+						(record.addedNodes[0] as HTMLElement).tagName === 'DIV' &&
+						// ... on the last child       (skip previous messages added when scrolling up)
+						chatElement.lastChild!.contains(record.target);
+				});
+
+				if (newMessages.length > 0) {
+					// Scroll to the bottom when there are new messages
+					scrollToBottom();
+				}
+			});
+
+			messageObserver.observe(chatElement, {childList: true, subtree: true});
+		}
+	};
+
+	hookMessageObserver();
+
+	// Hook it again if conversation changes
+	const conversationObserver = new MutationObserver(hookMessageObserver);
+	conversationObserver.observe(mainElement, {childList: true});
+}
+
 // Listen for emoji element dom insertion
 document.addEventListener('animationstart', insertionListener, false);
 
@@ -580,6 +632,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	// Disable autoplay if set in settings
 	toggleVideoAutoplay();
+
+	// Hook auto-scroll observer
+	observeAutoscroll();
 });
 
 // Handle title bar double-click.
@@ -632,10 +687,10 @@ document.addEventListener('keydown', async event => {
 		await previousConversation();
 	}
 
-	const num = parseInt(event.code.slice(-1), 10);
+	const number = Number.parseInt(event.code.slice(-1), 10);
 
-	if (num >= 1 && num <= 9) {
-		await jumpToConversation(num);
+	if (number >= 1 && number <= 9) {
+		await jumpToConversation(number);
 	}
 });
 
