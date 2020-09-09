@@ -374,6 +374,8 @@ function createMainWindow(): BrowserWindow {
 	win.on('app-command', (_event, command) => {
 		if (command === 'close') {
 			app.quit();
+		} else if (command === 'browser-refresh') {
+			win.reload();
 		}
 	});
 
