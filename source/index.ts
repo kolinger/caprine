@@ -553,7 +553,7 @@ function createMainWindow(): BrowserWindow {
 		};
 
 		const isTwoFactorAuth = (url: string): boolean => {
-			const twoFactorAuthURL = 'https://www.facebook.com/checkpoint/start';
+			const twoFactorAuthURL = 'https://www.facebook.com/checkpoint';
 			return url.startsWith(twoFactorAuthURL);
 		};
 
