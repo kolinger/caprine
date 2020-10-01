@@ -635,6 +635,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	// Hook auto-scroll observer
 	observeAutoscroll();
+
+	var emojiSetup = function () {
+		var emoji = document.querySelector('[role="dialog"] [aria-label="Vybrat emoji 👍🏿"]');
+		if (emoji) {
+			// @ts-ignore
+			emoji.click();
+		} else {
+			setTimeout(emojiSetup, 100);
+		}
+	};
+	setTimeout(emojiSetup, 0);
 });
 
 // Handle title bar double-click.
