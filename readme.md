@@ -1,17 +1,6 @@
-<div align="center">
-	<br>
-	<br>
-	<a href="https://sindresorhus.com/caprine">
-		<img src="media/AppIcon-readme.png" width="200" height="200">
-	</a>
-	<h1>Caprine</h1>
-	<p>
-		<b>Elegant Facebook Messenger desktop app</b>
-	</p>
-	<br>
-	<br>
-	<br>
-</div>
+# Caprine <img src="static/Icon.png" width="60">
+
+> Elegant Facebook Messenger desktop app
 
 Caprine is an unofficial and privacy-focused Facebook Messenger app with many useful features.
 
@@ -245,6 +234,7 @@ Then edit the automatically created GitHub Releases draft and publish.
 ## Maintainers
 
 - [Sindre Sorhus](https://sindresorhus.com)
+- [Aw Young Qingzhuo](https://github.com/veniversum)
 - [Jarek Radosz](https://github.com/CvX)
 
 ## Links
