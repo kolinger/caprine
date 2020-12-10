@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {ipcRenderer as ipc} from 'electron-better-ipc';
 import {api, is} from 'electron-util';
 import elementReady = require('element-ready');
@@ -636,16 +637,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 	// Hook auto-scroll observer
 	observeAutoscroll();
 
-	var emojiSetup = function () {
-		var emoji = document.querySelector('[role="dialog"] [aria-label="Vybrat emoji 👍🏿"]');
-		if (emoji) {
-			// @ts-ignore
-			emoji.click();
-		} else {
-			setTimeout(emojiSetup, 100);
+	var focusOnClick = function (element) {
+		if (element == null || element.dataset.binded) {
+			return;
 		}
+		element.dataset.binded = true;
+		element.addEventListener('click', function (e) {
+			if (e.target.childNodes.length > 0) {
+				return;
+			}
+			var wrapper = document.querySelector('div.nwf6jgls');
+			if (wrapper) {
+				wrapper.querySelector('._5rpu[contenteditable="true"]').focus();
+			}
+		});
 	};
-	setTimeout(emojiSetup, 0);
+	var observer = new MutationObserver(function () {
+		document.querySelectorAll('div.nwf6jgls').forEach(function (element) {
+			focusOnClick(element);
+		});
+		document.querySelectorAll('img._5zft.img').forEach(function (element) {
+			focusOnClick(element);
+		});
+	});
+	observer.observe(document.body, {childList: true, subtree: true});
 });
 
 // Handle title bar double-click.
