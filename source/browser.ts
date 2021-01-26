@@ -653,9 +653,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 		});
 	};
 	var observer = new MutationObserver(function () {
-		document.querySelectorAll('div.nwf6jgls').forEach(function (element) {
+		/*document.querySelectorAll('div.nwf6jgls').forEach(function (element) {
 			focusOnClick(element);
-		});
+		});*/
 		document.querySelectorAll('img._5zft.img').forEach(function (element) {
 			focusOnClick(element);
 		});
