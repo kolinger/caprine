@@ -401,7 +401,7 @@ function createMainWindow(): BrowserWindow {
 
 (async () => {
 	await Promise.all([ensureOnline(), app.whenReady()]);
-	await updateAppMenu();
+	await updateAppMenu({isNewDesign: false});
 	mainWindow = createMainWindow();
 
 	// Workaround for https://github.com/electron/electron/issues/5256
@@ -466,19 +466,23 @@ function createMainWindow(): BrowserWindow {
 	const {webContents} = mainWindow;
 
 	webContents.on('dom-ready', async () => {
-		await updateAppMenu();
+		const isNewDesign = Boolean(await ipcMain.callRenderer<undefined, Element>(mainWindow, 'check-new-ui'));
 
-		webContents.insertCSS(readFileSync(path.join(__dirname, '..', 'css', 'browser.css'), 'utf8'));
-		webContents.insertCSS(readFileSync(path.join(__dirname, '..', 'css', 'dark-mode.css'), 'utf8'));
-		webContents.insertCSS(readFileSync(path.join(__dirname, '..', 'css', 'vibrancy.css'), 'utf8'));
-		webContents.insertCSS(
-			readFileSync(path.join(__dirname, '..', 'css', 'code-blocks.css'), 'utf8')
-		);
-		webContents.insertCSS(readFileSync(path.join(__dirname, '..', 'css', 'autoplay.css'), 'utf8'));
+		await updateAppMenu({isNewDesign});
+
+		const files = ['browser.css', 'dark-mode.css', 'vibrancy.css', 'code-blocks.css', 'autoplay.css'];
+
+		const cssPath = isNewDesign ?
+			path.join(__dirname, '..', 'css', 'new-design') :
+			path.join(__dirname, '..', 'css');
+
+		for (const file of files) {
+			webContents.insertCSS(readFileSync(path.join(cssPath, file), 'utf8'));
+		}
 
 		if (config.get('useWorkChat')) {
 			webContents.insertCSS(
-				readFileSync(path.join(__dirname, '..', 'css', 'workchat.css'), 'utf8')
+				readFileSync(path.join(cssPath, 'workchat.css'), 'utf8')
 			);
 		}
 
@@ -501,7 +505,7 @@ function createMainWindow(): BrowserWindow {
 			ipcMain.answerRenderer('update-dnd-mode', async (initialSoundsValue: boolean) => {
 				doNotDisturb.on('change', (doNotDisturb: boolean) => {
 					isDNDEnabled = doNotDisturb;
-					ipcMain.callRenderer(mainWindow, 'toggle-sounds', isDNDEnabled ? false : initialSoundsValue);
+					ipcMain.callRenderer(mainWindow, 'toggle-sounds', {isNewDesign, checked: isDNDEnabled ? false : initialSoundsValue});
 				});
 
 				isDNDEnabled = await doNotDisturb.isEnabled();
