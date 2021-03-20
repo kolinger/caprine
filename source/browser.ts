@@ -810,6 +810,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	// Hook auto-scroll observer
 	observeAutoscroll();
 
+	// custom
 	var focusOnClick = function (element) {
 		if (element == null || element.dataset.binded) {
 			return;
@@ -819,18 +820,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 			if (e.target.childNodes.length > 0) {
 				return;
 			}
-			var wrapper = document.querySelector('div.nwf6jgls');
-			if (wrapper) {
-				wrapper.querySelector('._5rpu[contenteditable="true"]').focus();
-			}
+			document.querySelector('[contenteditable="true"]').focus();
 		});
 	};
 	var observer = new MutationObserver(function () {
 		/*document.querySelectorAll('div.nwf6jgls').forEach(function (element) {
 			focusOnClick(element);
 		});*/
+		// emoticons focus after click
 		document.querySelectorAll('img._5zft.img').forEach(function (element) {
 			focusOnClick(element);
+		});
+		// broken image preview
+		document.querySelectorAll('.kr520xx4').forEach(function (element) {
+			element.classList.remove('kr520xx4');
 		});
 	});
 	observer.observe(document.body, {childList: true, subtree: true});
