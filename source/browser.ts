@@ -812,10 +812,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	// custom
 	var focusOnClick = function (element) {
-		if (element == null || element.dataset.binded) {
+		if (element == null || element.dataset.bound) {
 			return;
 		}
-		element.dataset.binded = true;
+		element.dataset.bound = true;
 		element.addEventListener('click', function (e) {
 			if (e.target.childNodes.length > 0) {
 				return;
@@ -824,9 +824,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 		});
 	};
 	var observer = new MutationObserver(function () {
-		/*document.querySelectorAll('div.nwf6jgls').forEach(function (element) {
-			focusOnClick(element);
-		});*/
 		// emoticons focus after click
 		document.querySelectorAll('img._5zft.img').forEach(function (element) {
 			focusOnClick(element);
