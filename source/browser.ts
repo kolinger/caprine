@@ -829,7 +829,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 			focusOnClick(element);
 		});
 		// broken image preview
-		document.querySelectorAll('.kr520xx4').forEach(function (element) {
+		document.querySelectorAll('.pmk7jnqg.rq0escxv.i09qtzwb.n7fi1qx3.j9ispegn.j9y2yd7c.n167cdi4.mp6yeyp0.cknb6mjg.e72ty7fz.qlfml3jp.qmr60zad.inkptoze').forEach(function (element) {
 			element.classList.remove('kr520xx4');
 		});
 	});
