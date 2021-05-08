@@ -1,7 +1,7 @@
 {
 	"name": "caprine",
 	"productName": "Caprine",
-	"version": "2.52.4",
+	"version": "2.53.0",
 	"description": "Elegant Facebook Messenger desktop app",
 	"license": "MIT",
 	"repository": "sindresorhus/caprine",
@@ -16,13 +16,11 @@
 	},
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps",
-		"lint": "tsc && xo && stylelint \"css/*.css\"",
+		"lint": "tsc && xo && stylelint \"css/**/*.css\"",
 		"test": "npm run lint",
 		"start": "tsc && electron .",
-		"pack": "tsc && electron-builder --dir",
-		"dist": "tsc && electron-builder --macos --linux --windows --publish=always",
-		"release": "np && npm run publish-snap",
-		"publish-snap": "del dist && tsc && electron-builder --linux && snapcraft push --release=stable dist/*.snap"
+		"build": "tsc",
+		"release": "np"
 	},
 	"dependencies": {
 		"@sindresorhus/do-not-disturb": "^1.1.0",
@@ -73,6 +71,7 @@
 			"declaration-no-important": null,
 			"selector-class-pattern": null,
 			"selector-id-pattern": null,
+			"selector-max-class": null,
 			"no-duplicate-selectors": null,
 			"rule-empty-line-before": null,
 			"no-descending-specificity": null
