@@ -20,7 +20,8 @@
 		"test": "npm run lint",
 		"start": "tsc && electron .",
 		"build": "tsc",
-		"release": "np"
+		"release": "np",
+		"pack": "tsc && electron-builder --dir"
 	},
 	"dependencies": {
 		"@sindresorhus/do-not-disturb": "^1.1.0",
