@@ -11,7 +11,7 @@ import {INewDesign, IToggleMuteNotifications, IToggleSounds} from './types';
 const selectedConversationSelector = '._5l-3._1ht1._1ht2';
 const selectedConversationNewDesign = '[role=navigation] [role=grid] [role=row] [role=gridcell] [role=link][aria-current]';
 const preferencesSelector = '._10._4ebx.uiLayer._4-hy';
-const preferencesSelectorNewDesign = '[aria-label=Preferences]';
+const preferencesSelectorNewDesign = 'div[class="rq0escxv l9j0dhe7 du4w35lb"] > div:nth-of-type(3) > div';
 const messengerSoundsSelector = `${preferencesSelector} ._374d ._6bkz`;
 const conversationMenuSelector = '.uiLayer:not(.hidden_elem) [role=menu]';
 const conversationMenuSelectorNewDesign = '[role=menu].l9j0dhe7.swg4t2nn';
@@ -371,25 +371,20 @@ ipc.answerMain('reload', () => {
 	location.reload();
 });
 
-function setDarkMode(): void {
-	setDarkModeElement(document.documentElement);
+function setTheme(): void {
+	api.nativeTheme.themeSource = config.get('theme');
+	setThemeElement(document.documentElement);
 	updateVibrancy();
 }
 
-function setDarkModeElement(element: HTMLElement): void {
-	if (is.macos && config.get('followSystemAppearance')) {
-		api.nativeTheme.themeSource = 'system';
-	} else {
-		api.nativeTheme.themeSource = config.get('darkMode') ? 'dark' : 'light';
-	}
-
+function setThemeElement(element: HTMLElement): void {
 	element.classList.toggle('dark-mode', api.nativeTheme.shouldUseDarkColors);
 	element.classList.toggle('light-mode', !api.nativeTheme.shouldUseDarkColors);
 	element.classList.toggle('__fb-dark-mode', api.nativeTheme.shouldUseDarkColors);
 	element.classList.toggle('__fb-light-mode', !api.nativeTheme.shouldUseDarkColors);
 }
 
-async function observeDarkMode(): Promise<void> {
+async function observeTheme(): Promise<void> {
 	/* Main document's class list */
 	const observer = new MutationObserver((records: MutationRecord[]) => {
 		// Find records that had class attribute changed
@@ -401,7 +396,7 @@ async function observeDarkMode(): Promise<void> {
 		});
 		// If config and class list don't match, update class list
 		if (api.nativeTheme.shouldUseDarkColors !== isDark) {
-			setDarkMode();
+			setTheme();
 		}
 	});
 
@@ -415,7 +410,7 @@ async function observeDarkMode(): Promise<void> {
 				const {classList} = (newNode as HTMLElement);
 				const isLight = classList.contains('light-mode') || classList.contains('__fb-light-mode');
 				if (api.nativeTheme.shouldUseDarkColors === isLight) {
-					setDarkModeElement(newNode as HTMLElement);
+					setThemeElement(newNode as HTMLElement);
 				}
 			}
 		}
@@ -428,7 +423,7 @@ async function observeDarkMode(): Promise<void> {
 	}
 
 	// Attribute notation needed here to guarantee exact (not partial) match.
-	const modalElements = await elementReady<HTMLElement>('div[class="rq0escxv l9j0dhe7 du4w35lb"] > div:nth-of-type(3) > div', {stopOnDomReady: false});
+	const modalElements = await elementReady<HTMLElement>(preferencesSelectorNewDesign, {stopOnDomReady: false});
 	if (modalElements) {
 		observerNew.observe(modalElements, {childList: true});
 	}
@@ -515,7 +510,7 @@ ipc.answerMain('update-sidebar', () => {
 	updateSidebar();
 });
 
-ipc.answerMain('set-dark-mode', setDarkMode);
+ipc.answerMain('set-theme', setTheme);
 
 ipc.answerMain('set-private-mode', setPrivateMode);
 
@@ -818,9 +813,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 	updateSidebar();
 
 	// Activate Dark Mode if it was set before quitting
-	setDarkMode();
+	setTheme();
 	// Observe for dark mode changes
-	observeDarkMode();
+	observeTheme();
 
 	// Activate Private Mode if it was set before quitting
 	setPrivateMode(newDesign);
@@ -832,7 +827,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	// Prevent flash of white on startup when in dark mode
 	// TODO: find a CSS-only solution
-	if (!is.macos && config.get('darkMode')) {
+	if (!is.macos && api.nativeTheme.shouldUseDarkColors) {
 		document.documentElement.style.backgroundColor = '#1e1e1e';
 	}
 

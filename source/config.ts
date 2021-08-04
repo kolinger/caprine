@@ -2,8 +2,7 @@ import Store = require('electron-store');
 import {is} from 'electron-util';
 
 type StoreType = {
-	followSystemAppearance: boolean;
-	darkMode: boolean;
+	theme: 'system' | 'light' | 'dark';
 	privateMode: boolean;
 	showPrivateModePrompt: boolean;
 	vibrancy: 'none' | 'sidebar' | 'full';
@@ -45,13 +44,10 @@ type StoreType = {
 };
 
 const schema: Store.Schema<StoreType> = {
-	followSystemAppearance: {
-		type: 'boolean',
-		default: true
-	},
-	darkMode: {
-		type: 'boolean',
-		default: false
+	theme: {
+		type: 'string',
+		enum: ['system', 'light', 'dark'],
+		default: 'system'
 	},
 	privateMode: {
 		type: 'boolean',
@@ -236,9 +232,33 @@ function updateSidebarSetting(store: Store<StoreType>): void {
 	}
 }
 
+function updateThemeSetting(store: Store<StoreType>): void {
+	const darkMode = store.get('darkMode');
+	const followSystemAppearance = store.get('followSystemAppearance');
+
+	if (is.macos && followSystemAppearance) {
+		store.set('theme', 'system');
+	} else if (typeof darkMode !== 'undefined') {
+		store.set('theme', darkMode ? 'dark' : 'light');
+	} else if (!store.has('theme')) {
+		store.set('theme', 'system');
+	}
+
+	if (typeof darkMode !== 'undefined') {
+		// @ts-expect-error
+		store.delete('darkMode');
+	}
+
+	if (typeof followSystemAppearance !== 'undefined') {
+		// @ts-expect-error
+		store.delete('followSystemAppearance');
+	}
+}
+
 function migrate(store: Store<StoreType>): void {
 	updateVibrancySetting(store);
 	updateSidebarSetting(store);
+	updateThemeSetting(store);
 }
 
 const store = new Store<StoreType>({schema});

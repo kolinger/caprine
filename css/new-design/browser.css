@@ -31,6 +31,13 @@ html.private-mode [role='navigation'] [role='row'] .d2edcug0.hpfvmrgz.qv66sw1b.c
 html.private-mode [role='navigation'] [role='row'] .qzhwtbm6.knvmm38d {
 	filter: blur(5px);
 }
+/* Chat list: active contacts */
+html.private-mode [role='navigation'] .pedkr2u6 li svg[role='img'] {
+	filter: blur(5px);
+}
+html.private-mode [role='navigation'] .pedkr2u6 li .d2edcug0.hpfvmrgz.qv66sw1b.c1et5uql.b0tq1wua.a8c37x1j.keod5gw0.nxhoafnm.aigsh9s9.d9wwppkn.fe6kdd0r.mau55g9w.c8b282yb.hrzyx87i.jq4qci2q.a3bd9o3v.ekzkrbhg.oo9gr5id.hzawbc8m {
+	filter: blur(5px);
+}
 /* Conversation: profile picture */
 html.private-mode [data-pagelet='page'] .a8c37x1j.d2edcug0.sn7ne77z.bixrwtb6 {
 	filter: blur(5px);
@@ -82,6 +89,13 @@ html.private-mode [role='main'] .rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.pf
 /* Right sidebar: active status */
 html.private-mode [role='main'] .d2edcug0.hpfvmrgz.qv66sw1b.c1et5uql.b0tq1wua.a8c37x1j.keod5gw0.nxhoafnm.aigsh9s9.tia6h79c.fe6kdd0r.mau55g9w.c8b282yb.iv3no6db.e9vueds3.j5wam9gi.knj5qynh.m9osqain.oqcyycmt {
 	filter: blur(5px);
+}
+
+/* Force max-width on videos */
+.ni8dbmo4.stjgntxs.g5ia77u1.ii04i59q.j83agx80.cbu4d94t.ll8tlv6m > span,
+.l9j0dhe7.km676qkl.cxmmr5t8.myj7ivm5.hcukyx3x,
+.opwvks06.hop1g133.linmgsc8.t63ysoy8.qutah8gn.ni8dbmo4.stjgntxs.ktxn16wu.jz9ahs1c.efwgsih4.e72ty7fz.qmr60zad.qlfml3jp.inkptoze {
+	max-width: 100%;
 }
 
 /* Hide the "Messenger App for Windows" banner in chat list */

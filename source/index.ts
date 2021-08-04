@@ -41,6 +41,7 @@ electronDebug({
 
 electronDl();
 electronContextMenu({
+	showCopyImageAddress: true,
 	prepend: (defaultActions: Actions, params: ContextMenuParams) => {
 		/*
 		TODO: Use menu option or use replacement of options (https://github.com/sindresorhus/electron-context-menu/issues/70)
@@ -290,7 +291,6 @@ function setNotificationsMute(status: boolean): void {
 
 function createMainWindow(): BrowserWindow {
 	const lastWindowState = config.get('lastWindowState');
-	const isDarkMode = config.get('darkMode');
 
 	// Messenger or Work Chat
 	const mainURL = config.get('useWorkChat') ?
@@ -310,7 +310,6 @@ function createMainWindow(): BrowserWindow {
 		alwaysOnTop: config.get('alwaysOnTop'),
 		titleBarStyle: 'hiddenInset',
 		autoHideMenuBar: config.get('autoHideMenuBar'),
-		darkTheme: isDarkMode, // GTK+3
 		webPreferences: {
 			preload: path.join(__dirname, 'browser.js'),
 			nativeWindowOpen: true,
@@ -328,7 +327,7 @@ function createMainWindow(): BrowserWindow {
 	darkMode.onChange(() => {
 		if (darkMode.isEnabled !== previousDarkMode) {
 			previousDarkMode = darkMode.isEnabled;
-			win.webContents.send('set-dark-mode');
+			win.webContents.send('set-theme');
 		}
 	});
 
