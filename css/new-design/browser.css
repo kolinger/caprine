@@ -1,6 +1,6 @@
 /* Hide disabled scrollbar on the right side */
 body::-webkit-scrollbar {
-	width: 0;
+	display: none;
 }
 
 /* A utility class for temporarily hiding all dropdown menus */
@@ -9,7 +9,7 @@ html.hide-dropdowns [role='menu'].l9j0dhe7.swg4t2nn {
 }
 
 /* A utility class for temporarily hiding preferences window */
-html.hide-preferences-window div[class='rq0escxv l9j0dhe7 du4w35lb'] > div:nth-of-type(3) > div > div {
+html.hide-preferences-window div[class='bdao358l om3e55n1 g4tp4svg'] > div:nth-of-type(3) > div > div {
 	display: none;
 }
 
@@ -19,72 +19,74 @@ html.hide-r-sidebar .rq0escxv.l9j0dhe7.du4w35lb.j83agx80.g5gj957u.rj1gh0hx.buofh
 }
 
 /* -- Private mode -- */
-/* Chat list: profile picture */
-html.private-mode [role='navigation'] [role='row'] svg[role='img'] {
+/* Preferences button: profile picture */
+html.private-mode [role='navigation'] .qi72231t.o9w3sbdw.nu7423ey.tav9wjvu.flwp5yud.tghlliq5.gkg15gwv.s9ok87oh.s9ljgwtm.lxqftegz.bf1zulr9.frfouenu.bonavkto.djs4p424.r7bn319e.bdao358l.fsf7x5fv.tgm57n0e.jez8cy9q.s5oniofx.m8h3af8h.l7ghb35v.kjdc1dyq.kmwttqpk.dnr7xe2t.aeinzg81.srn514ro.oxkhqvkx.rl78xhln.nch0832m.om3e55n1.cr00lzj9.rn8ck1ys.s3jn8y49.g4tp4svg.o9erhkwx.dzqi5evh.hupbnkgi.hvb2xoa8.fxk3tzhb.jl2a5g8c.f14ij5to.l3ldwz01.icdlwmnq {
 	filter: blur(5px);
 }
-/* Chat list: name and last message (last message sometimes includes senders name) */
-html.private-mode [role='navigation'] [role='row'] .d2edcug0.hpfvmrgz.qv66sw1b.c1et5uql.oi732d6d.ik7dh3pa.ht8s03o8.a8c37x1j.keod5gw0.nxhoafnm.aigsh9s9.d9wwppkn.fe6kdd0r.mau55g9w.c8b282yb.iv3no6db.jq4qci2q.a3bd9o3v.ekzkrbhg.oo9gr5id.hzawbc8m {
+/* Preferences: profile picture */
+html.private-mode .alzwoclg.b0eko5f3.q46jt4gp.r5g9zsuq .aglvbi8b.om3e55n1.i8zpp7h3.g4tp4svg {
 	filter: blur(5px);
 }
-/* Chat list: name and profile picture for unread message */
-html.private-mode [role='navigation'] [role='row'] .qzhwtbm6.knvmm38d {
+/* Preferences: account name */
+html.private-mode [href^='https://www.facebook.com/1'] .b6ax4al1.i54nktwv.z2vv26z9.om3e55n1.gvxzyvdx.aeinzg81.t7p7dqev.gh25dzvf.gem102v4.ncib64c9.mrvwc6qr.sx8pxkcf.f597kf1v.cpcgwwas.ocv3nf92.k1z55t6l.tpi2lg9u.pbevjfx6.ztn2w49o.f5mw3jnl.ib8x7mpr.qc5lal2y {
+	filter: blur(5px);
+}
+/* Chat list: name, profile picture and last message */
+html.private-mode [role='navigation'] [role='row'] .b6ax4al1.gvxzyvdx {
 	filter: blur(5px);
 }
 /* Chat list: active contacts */
-html.private-mode [role='navigation'] .pedkr2u6 li svg[role='img'] {
+html.private-mode [role='navigation'] .s9ok87oh.bf1zulr9.s9ljgwtm.lxqftegz.frfouenu.r7bn319e.bonavkto.djs4p424.bdao358l.alzwoclg.cgu29s5g.i15ihif8.sl27f92c.m8h3af8h.l7ghb35v.kjdc1dyq.kmwttqpk.aeinzg81.srn514ro.rl78xhln.om3e55n1.g4tp4svg.i85zmo3j.jl2a5g8c.b0eko5f3.fwlpnqze.il7dmu95z {
 	filter: blur(5px);
 }
-html.private-mode [role='navigation'] .pedkr2u6 li .d2edcug0.hpfvmrgz.qv66sw1b.c1et5uql.b0tq1wua.a8c37x1j.keod5gw0.nxhoafnm.aigsh9s9.d9wwppkn.fe6kdd0r.mau55g9w.c8b282yb.hrzyx87i.jq4qci2q.a3bd9o3v.ekzkrbhg.oo9gr5id.hzawbc8m {
+/* Chat list: person tiny heads */
+html.private-mode [role='row'] .aglvbi8b.om3e55n1.i8zpp7h3.g4tp4svg {
+	filter: blur(3px);
+}
+/* Conversation: titlebar profile picture */
+html.private-mode .b6ax4al1.gvxzyvdx.dgxim35p.p9wrh9lq {
 	filter: blur(5px);
 }
-/* Conversation: profile picture */
-html.private-mode [data-pagelet='page'] .a8c37x1j.d2edcug0.sn7ne77z.bixrwtb6 {
+/* Conversation: sender profile picture */
+html.private-mode .mfclru0v.p9wrh9lq.pytsy3co.aglvbi8b {
 	filter: blur(5px);
 }
-/* Conversation: name */
-html.private-mode [data-pagelet='page'] .d2edcug0.hpfvmrgz.qv66sw1b.c1et5uql.gk29lw5a.a8c37x1j.keod5gw0.nxhoafnm.aigsh9s9.tia6h79c.fe6kdd0r.mau55g9w.c8b282yb.iv3no6db.a5q79mjw.g1cxx5fr.lrazzd5p.oo9gr5id.oqcyycmt {
+/* Conversation: name & last seen */
+html.private-mode [role='main'] .alzwoclg.cqf1kptm.hael596l.jcxyg2ei.cgu29s5g.dn6jqzda {
 	filter: blur(5px);
 }
 /* Conversation: read indicator */
-html.private-mode [role='main'] .kkf49tns.cgat1ltu.hrs1iv20.abiwlrkh.s45kfl79.emlxlaya.bkmhp75w.spb7xbtv {
+html.private-mode [role='main'] .iec8yc8l.b7mnygb8.dktd5soj.f14ij5to.qmqpeqxj.e7u6y3za.qwcclf47.nmlomj2f {
 	filter: blur(5px);
 }
-/* Conversation: final read indicator (groups) */
-html.private-mode [role='main'] .pfnyh3mw.j83agx80.aahdfvyu.cgat1ltu.dicw6rsg.hcukyx3x {
-	filter: blur(5px);
-}
-/* Conversation titlebar and sidebar: name */
-html.private-mode [role='main'] .rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.g5gj957u.d2edcug0.hpfvmrgz.rj1gh0hx.buofh1pr.p8fzw8mz.pcp91wgn.iuny7tx3.ipjc6fyt {
-	filter: blur(5px);
-}
-/* Message list: sender profile picture */
-html.private-mode [role='main'] .pfnyh3mw.aovydwv3.j83agx80 > span {
-	filter: blur(5px);
-}
-/* Messsage list: sender replied to name */
-html.private-mode [role='main'] .hyh9befq.pipptul6.sq6gx45u {
-	filter: blur(5px);
-}
-/* Message list: sender name */
-html.private-mode [role='main'] .r9r71o1u.m9osqain.fsrhnwul.d0szoon8.r8blr3vg.qjjbsfad {
-	filter: blur(5px);
-}
-/* Message list: person tiny heads */
-html.private-mode [role='row'] .j83agx80.btwxx1t3.pfnyh3mw.lhclo0ds.ni8dbmo4.stjgntxs.l9j0dhe7 {
+/* Conversation: name & details at the beginning */
+html.private-mode .h6ft4zvz.rj2hsocd.aesu6q9g.e4ay1f3w .hsphh064.pk1vzqw1.hxfwr5lz.qc5lal2y {
 	filter: blur(5px);
 }
 /* Right sidebar: profile picture */
-html.private-mode [role='main'] .rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.pfnyh3mw.d2edcug0.bp9cbjyn.discj3wi.ihqw7lf3 {
+html.private-mode .aglvbi8b.om3e55n1.i8zpp7h3.g4tp4svg {
 	filter: blur(5px);
 }
 /* Right sidebar: name */
-html.private-mode [role='main'] .rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.pfnyh3mw.d2edcug0.bp9cbjyn.hv4rvrfc.dati1w0a.jb3vyjys.ihqw7lf3 {
+html.private-mode [role='main'] .qi72231t.nu7423ey.n3hqoq4p.r86q59rh.b3qcqh3k.fq87ekyn.bdao358l.fsf7x5fv.rse6dlih.s5oniofx.m8h3af8h.l7ghb35v.kjdc1dyq.kmwttqpk.srn514ro.oxkhqvkx.rl78xhln.nch0832m.cr00lzj9.rn8ck1ys.s3jn8y49.icdlwmnq.jxuftiz4.cxfqmxzd {
 	filter: blur(5px);
 }
 /* Right sidebar: active status */
-html.private-mode [role='main'] .d2edcug0.hpfvmrgz.qv66sw1b.c1et5uql.b0tq1wua.a8c37x1j.keod5gw0.nxhoafnm.aigsh9s9.tia6h79c.fe6kdd0r.mau55g9w.c8b282yb.iv3no6db.e9vueds3.j5wam9gi.knj5qynh.m9osqain.oqcyycmt {
+html.private-mode [role='main'] .b6ax4al1.i54nktwv.z2vv26z9.om3e55n1.gvxzyvdx.aeinzg81.t7p7dqev.gh25dzvf.gem102v4.ncib64c9.mrvwc6qr.sx8pxkcf.f597kf1v.cpcgwwas.ocv3nf92.nfkogyam.gh55jysx.rtxb060y.hsphh064.pk1vzqw1.hxfwr5lz.qc5lal2y {
 	filter: blur(5px);
+}
+/* New conversation: profile picture */
+html.private-mode .mfclru0v.pytsy3co.qmqpeqxj.e7u6y3za.qwcclf47.nmlomj2f.i8zpp7h3.p9wrh9lq {
+	filter: blur(5px);
+}
+/* New conversation: profile picture (groups) */
+html.private-mode .qmqpeqxj.e7u6y3za.qwcclf47.nmlomj2f.s8sjc6am {
+	filter: blur(5px);
+}
+/* Calls: incoming call dialog account name */
+html.private-mode .b6ax4al1.i54nktwv.z2vv26z9.om3e55n1.gvxzyvdx.aeinzg81.t7p7dqev.gh25dzvf.gem102v4.ncib64c9.mrvwc6qr.sx8pxkcf.f597kf1v.cpcgwwas.ocv3nf92.qntmu8s7.o48pnaf2.pbevjfx6.hsphh064.m2nijcs8.pc9ouhwb.qc5lal2y,
+html.private-mode .gvxzyvdx.aeinzg81.t7p7dqev.gh25dzvf.rse6dlih.ocv3nf92.nfkogyam.innypi6y.rtxb060y.qc5lal2y {
+	filter: blur(10px);
 }
 
 /* Force max-width on videos */
@@ -95,7 +97,7 @@ html.private-mode [role='main'] .d2edcug0.hpfvmrgz.qv66sw1b.c1et5uql.b0tq1wua.a8
 }
 
 /* Hide the "Messenger App for Mac/Windows" banner in chat list */
-.rq0escxv.l9j0dhe7.du4w35lb.j83agx80.g5gj957u.rj1gh0hx.buofh1pr.hpfvmrgz.i1fnvgqd.bp9cbjyn.owycx6da.btwxx1t3.gl4o1x5y.lt9micmv.qt6c0cv9.jb3vyjys.usczdcwk.iihba337.p8dawk7l,
+.rq0escxv.l9j0dhe7.du4w35lb.j83agx80.rj1gh0hx.g5gj957u.hpfvmrgz.i1fnvgqd.bp9cbjyn.owycx6da.btwxx1t3.usczdcwk.iihba337.p8dawk7l.jb3vyjys.gl4o1x5y.qt6c0cv9.lt9micmv.kb5gq1qc.g0mhvs5p,
 .os-win32 .rq0escxv.l9j0dhe7.du4w35lb.j83agx80.g5gj957u.rj1gh0hx.buofh1pr.hpfvmrgz.i1fnvgqd.bp9cbjyn.owycx6da.btwxx1t3.s9xz0pwp.c4m0enpj.rl78xhln.srn514ro.sn0e7ne5.f6rbj1fe.l3ldwz01 {
 	display: none;
 }
@@ -130,32 +132,38 @@ html.private-mode [role='main'] .d2edcug0.hpfvmrgz.qv66sw1b.c1et5uql.b0tq1wua.a8
 /* -- Sidebar views -- */
 
 /* Hidden: Hide sidebar */
-html.sidebar-hidden .o36gj0jk.g0mhvs5p {
-	visibility: hidden;
-	min-width: 0;
-	max-width: 0;
-	width: 0;
-	height: 0;
+html.sidebar-hidden .bdao358l.om3e55n1.alzwoclg.cqf1kptm.gvxzyvdx.aeinzg81.jez8cy9q.fawcizw8.sl4bvocy.mm98tyaj.b0ur3jhr.f76nr8pf {
+	display: none;
 }
 
+/* Narrow: Hide preferences button */
+html.sidebar-force-narrow .pvreidsc.r227ecj6.n68fow1o.gt60zsk1.lth9pzmp {
+	display: none;
+}
 /* Narrow: Hide conversation previews */
-html.sidebar-force-narrow .rq0escxv.l9j0dhe7.du4w35lb.j83agx80.pfnyh3mw.i1fnvgqd.bp9cbjyn.owycx6da.btwxx1t3 > div:nth-child(2),
-html.sidebar-force-narrow .rq0escxv.l9j0dhe7.du4w35lb.j83agx80.pfnyh3mw.i1fnvgqd.bp9cbjyn.owycx6da.btwxx1t3 > div:nth-child(3) {
-	visibility: hidden;
+html.sidebar-force-narrow .bdao358l.om3e55n1.g4tp4svg.alzwoclg.cqf1kptm.jez8cy9q.gvxzyvdx.aeinzg81.cgu29s5g {
+	display: none;
 }
-/* Narrow: Width of search bar */
-html.sidebar-force-narrow .oajrlxb2.rq0escxv.f1sip0of.hidtqoto.e70eycc3.lzcic4wl.hzawbc8m.ijkhr0an.aaoq3grb.sgqwj88q.b3i9ofy5.oo9gr5id.b1f16np4.hdh3q7d8.dwo3fsh8.qu0x051f.esr5mh6w.e9989ue4.r7d6kgcz.br7hx15l.h2jyy9rg.n3ddgdk9.owxd89k7.ihxqhq3m.jq4qci2q.k4urcfbm.iu8raji3.tv7at329.l60d2q6s.d1544ag0.hwnh5xvq.fjf4s8hc.aj8hi1zk.r4fl40cc.kd8v7px7.m07ooulj.mzan44vs {
-	width: 68px;
-}
-/* Narrow: Conversation list header */
-html.sidebar-force-narrow .ahb00how {
+/* Narrow: Hide search bar */
+html.sidebar-force-narrow .bdao358l.om3e55n1.g4tp4svg.r227ecj6.gt60zsk1.rj2hsocd.f9xcifuu {
 	display: none;
 }
 /* Narrow: Width of conversation list */
-html.sidebar-force-narrow .g0mhvs5p {
-	width: 88px;
+html.sidebar-force-narrow .bdao358l.om3e55n1.alzwoclg.cqf1kptm.gvxzyvdx.aeinzg81.jez8cy9q.fawcizw8.sl4bvocy.mm98tyaj.b0ur3jhr.f76nr8pf {
+	width: 80px;
 }
-/* Narrow: Remove scrollbar from conversation list */
-html.sidebar-force-narrow .oj68ptkr.jk6sbkaj.kdgqqoy6.ihh4hy1g.qttc61fc.datstx6m.k4urcfbm {
-	visibility: hidden;
+
+/* -- Toggle message buttons -- */
+body .qi72231t.o9w3sbdw.nu7423ey.tav9wjvu.flwp5yud.tghlliq5.gkg15gwv.s9ok87oh.s9ljgwtm.lxqftegz.bf1zulr9.frfouenu.bonavkto.djs4p424.r7bn319e.bdao358l.fsf7x5fv.tgm57n0e.jez8cy9q.s5oniofx.m8h3af8h.l7ghb35v.kjdc1dyq.dnr7xe2t.aeinzg81.om3e55n1.cr00lzj9.rn8ck1ys.s3jn8y49.g4tp4svg.o9erhkwx.dzqi5evh.hupbnkgi.hvb2xoa8.fxk3tzhb.jl2a5g8c.f14ij5to.l3ldwz01.icdlwmnq.q46jt4gp.b0eko5f3.r5g9zsuq.fwlpnqze.jbg88c62,
+body .s8sjc6am.z6erz7xo.alzwoclg.jcxyg2ei.i85zmo3j.b0ur3jhr.kjdc1dyq.tjkoo78o.iwr3bmeu.qgj99rie {
+	display: flex;
+}
+
+body.show-message-buttons .qi72231t.o9w3sbdw.nu7423ey.tav9wjvu.flwp5yud.tghlliq5.gkg15gwv.s9ok87oh.s9ljgwtm.lxqftegz.bf1zulr9.frfouenu.bonavkto.djs4p424.r7bn319e.bdao358l.fsf7x5fv.tgm57n0e.jez8cy9q.s5oniofx.m8h3af8h.l7ghb35v.kjdc1dyq.dnr7xe2t.aeinzg81.om3e55n1.cr00lzj9.rn8ck1ys.s3jn8y49.g4tp4svg.o9erhkwx.dzqi5evh.hupbnkgi.hvb2xoa8.fxk3tzhb.jl2a5g8c.f14ij5to.l3ldwz01.icdlwmnq.q46jt4gp.b0eko5f3.r5g9zsuq.fwlpnqze.jbg88c62,
+body.show-message-buttons .s8sjc6am.z6erz7xo.alzwoclg.jcxyg2ei.i85zmo3j.b0ur3jhr.kjdc1dyq.tjkoo78o.iwr3bmeu.qgj99rie {
+	display: none;
+}
+
+body.show-message-buttons .cgu29s5g.alzwoclg.oo5upp5e {
+	margin-left: 15px !important;
 }

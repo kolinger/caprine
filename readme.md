@@ -1,31 +1,42 @@
-# Caprine <img src="static/Icon.png" width="60">
-
-> Elegant Facebook Messenger desktop app
-
-Caprine is an unofficial and privacy-focused Facebook Messenger app with many useful features.
-
-**Caprine is feature complete. However, we welcome contributions for improvements and bug fixes.**
-
-**[Website](https://sindresorhus.com/caprine)**
-
-<br>
-
-<a href="https://github.com/sindresorhus/caprine/releases/latest">
-	<img src="media/screenshot.png" width="846">
-</a>
+<div align="center">
+	<br>
+	<br>
+	<a href="https://sindresorhus.com/caprine">
+		<img src="media/AppIcon-readme.png" width="200" height="200">
+	</a>
+	<h1>Caprine</h1>
+	<p>
+		<b>Elegant Facebook Messenger desktop app</b>
+	</p>
+	<br>
+	<br>
+	<p>
+		Caprine is an unofficial and privacy-focused Facebook Messenger app with many useful features.
+	</p>
+	<b>
+		Caprine is feature complete. However, we welcome contributions for improvements and bug fixes.
+	</b>
+	<br>
+		<a href="https://sindresorhus.com/caprine">
+		Website
+		</a>
+	<br>
+	<a href="https://github.com/sindresorhus/caprine/releases/latest">
+		<img src="media/screenshot.png" width="846">
+	</a>
+</div>
 
 ## Highlights
 
 - [Dark theme](#dark-mode)
-- [Vibrant theme](#vibrancy)\*
+- [Vibrant theme](#vibrancy-macos-only)\*
 - [Privacy-focused](#privacy)
 - [Keyboard shortcuts](#keyboard-shortcuts)
 - [Menu bar mode](#menu-bar-mode-macos-only-)\*
 - [Work Chat support](#work-chat-support)
 - [Code blocks](#code-blocks)
-- [Touch Bar support](#touch-bar-support)
+- [Touch Bar support](#touch-bar-support-macos-only)\*
 - [Custom styles](#custom-styles)
-- Disable autoplay for videos
 - Cross-platform
 - Silent auto-updates
 - Custom text size
@@ -48,23 +59,173 @@ Or with [Homebrew](https://brew.sh): `$ brew install caprine`
 
 ### Linux
 
-[**Download**](https://github.com/sindresorhus/caprine/releases/latest) the `.AppImage` or `.deb` file.
+<table>
+	<th>Distribution</th>
+	<th>Repository</th>
+	<th>Automatic Updates</th>
+	<th>Maintainer</th>
+	<th>How to install</th>
+	<tr>
+		<td>Arch Linux</td>
+		<td>Community</td>
+		<td align="center">✔️</td>
+		<td>Frederik Schwan</td>
+		<td><code>pacman -S caprine</code></td>
+	</tr>
+	<tr>
+		<td>Debian / Ubuntu (manually)</td>
+		<td>GitHub</td>
+		<td align="center">❌</td>
+		<td>Official</td>
+		<td>
+			<a href="https://github.com/sindresorhus/caprine/releases/latest">Download</a> the .deb file
+		</td>
+	</tr>
+	<tr>
+		<td>Debian / Ubuntu (deb-get)</td>
+		<td>GitHub</td>
+		<td align="center">✔️</td>
+		<td>Official</td>
+		<td>
+			Follow the <a href=#installation-using-deb-get>instructions below</a>
+		</td>
+	</tr>
+	<tr>
+		<td>Debian / Ubuntu (APT)</td>
+		<td>Gemfury</td>
+		<td align="center">✔️</td>
+		<td>Lefteris Garyfalakis</td>
+		<td>
+			Follow the <a href=#apt-repository-gemfury>instructions below</a>
+		</td>
+	</tr>
+	<tr>
+		<td>RHEL / Fedora / openSUSE</td>
+		<td>Copr</td>
+		<td align="center">✔️</td>
+		<td>Dušan Simić</td>
+		<td>
+			Follow the <a href=#copr>instructions below</a>
+		</td>
+	</tr>
+	<tr>
+		<td>AppImage</td>
+		<td>GitHub</td>
+		<td align="center">✔️</td>
+		<td>Official</td>
+		<td>
+			Follow the <a href=#appimage>instructions below</a>
+		</td>
+	</tr>
+	<tr>
+		<td>Flatpak</td>
+		<td>Flathub</td>
+		<td align="center">✔️</td>
+		<td>Dušan Simić</td>
+		<td>
+			Visit <a href="https://flathub.org/apps/details/com.sindresorhus.Caprine">Flathub</a> and follow the instructions
+		</td>
+	</tr>
+	<tr>
+		<td>Snap</td>
+		<td>Snapcraft</td>
+		<td align="center">✔️</td>
+		<td>Official</td>
+		<td>
+			Visit <a href="https://snapcraft.io/caprine">Snapcraft</a> and follow the instructions
+		</td>
+	</tr>
+</table>
 
-Arch Linux: `pacman -S caprine`
+#### Installation using deb-get:
 
-Fedora:
+* Download and install [deb-get](https://github.com/wimpysworld/deb-get).
+* Run `deb-get install caprine`.
+
+Note: deb-get is 3rd party software, not to be associated with apt-get.
+
+#### APT repository (Gemfury):
+
+Run the following command to add it:
+
+```sh
+curl -s https://raw.githubusercontent.com/lefterisgar/caprine/upstream/addRepo.sh | sudo bash
 ```
+
+Alternatively (for advanced users):
+```sh
+# Add the repository
+echo "deb [trusted=yes] https://apt.fury.io/lefterisgar/ * *" > \
+/etc/apt/sources.list.d/caprine.list
+
+# Update the package indexes
+sudo apt update
+
+# Install Caprine
+sudo apt install caprine
+```
+
+
+#### Copr:
+
+For Fedora / RHEL:
+
+```sh
 sudo dnf copr enable dusansimic/caprine
 sudo dnf install caprine
 ```
 
-Also available as a [snap](https://snapcraft.io/caprine).
+For openSUSE:
+- Create a new file in `/etc/zypp/repos.d/caprine.repo`.
+- Copy the contents of [this file](https://copr.fedorainfracloud.org/coprs/dusansimic/caprine/repo/opensuse-tumbleweed/dusansimic-caprine-opensuse-tumbleweed.repo) and paste them into the file you just created.
 
-*The AppImage needs to be [made executable](http://discourse.appimage.org/t/how-to-make-an-appimage-executable/80) after download.*
+Alternatively use the following one-liner:
+```sh
+curl -s https://copr.fedorainfracloud.org/coprs/dusansimic/caprine/repo/opensuse-tumbleweed/dusansimic-caprine-opensuse-tumbleweed.repo | sudo tee /etc/zypp/repos.d/caprine.repo
+```
+
+#### AppImage:
+
+[Download](https://github.com/sindresorhus/caprine/releases/latest) the `.AppImage` file.
+
+Make it [executable](https://discourse.appimage.org/t/how-to-run-an-appimage/80):
+
+```sh
+chmod +x Caprine-2.xx.x.AppImage
+```
+
+Then run it!
+
+#### About immutable Linux distributions:
+[Fedora Silverblue](https://silverblue.fedoraproject.org), [Fedora Kinoite](https://kinoite.fedoraproject.org), [EndlessOS](https://endlessos.com), [CarbonOS](https://carbon.sh) and other immutable distributions only support Flatpak and/or AppImage.*
+
+*Note: On some distributions Flatpak must be [pre-configured manually](https://flatpak.org/setup).*
 
 ### Windows
 
-[**Download**](https://github.com/sindresorhus/caprine/releases/latest) the `.exe` file.
+<table>
+	<th>Method</th>
+	<th>Repository</th>
+	<th>Automatic Updates</th>
+	<th>Maintainer</th>
+	<th>How to install</th>
+	<tr>
+		<td>Manually</td>
+		<td>GitHub</td>
+		<td align="center">❌</td>
+		<td>Official</td>
+		<td>
+			<a href="https://github.com/sindresorhus/caprine/releases/latest">Download</a> the .exe file
+		</td>
+	</tr>
+	<tr>
+		<td>Chocolatey</td>
+		<td>Community</td>
+		<td align="center">✔️</td>
+		<td>Michael Quevillon</td>
+		<td><code>choco install caprine</code></td>
+	</tr>
+</table>
 
 *For taskbar notification badges to work on Windows 10, you'll need to [enable them in Taskbar Settings](https://www.tenforums.com/tutorials/48186-taskbar-buttons-hide-show-badges-windows-10-a.html).*
 
@@ -80,7 +241,7 @@ You can toggle dark mode in the `View` menu or with <kbd>Command</kbd> <kbd>d</k
 
 You can prevent others from looking at who you're chatting with by enabling the “Hide Names and Avatars” feature in the “View” menu or with <kbd>Command/Control</kbd> <kbd>Shift</kbd> <kbd>n</kbd>.
 
-### Vibrancy
+### Vibrancy *(macOS only)*
 
 On *macOS*, you can toggle the window vibrancy effect in the `View` menu.
 
@@ -92,7 +253,7 @@ On *macOS*, you can toggle the window vibrancy effect in the `View` menu.
 
 You can choose to prevent people from knowing when you have seen a message and when you are currently typing. These settings are available under the `Caprine`/`File` menu.
 
-### Mute desktop notifications
+### Mute desktop notifications *(macOS only)*
 
 You can quickly disable receiving notifications from the `Caprine`/`File` menu or the Dock on macOS.
 
@@ -221,8 +382,8 @@ Built with [Electron](https://electronjs.org).
 
 ### Run
 
-```
-$ npm install && npm start
+```sh
+npm install && npm start
 ```
 
 ### Build
@@ -231,16 +392,21 @@ See the [`electron-builder` docs](https://www.electron.build/multi-platform-buil
 
 ### Publish
 
-```
-$ npm run release
+```sh
+npm run release
 ```
 
 Then edit the automatically created GitHub Releases draft and publish.
 
 ## Maintainers
 
-- [Sindre Sorhus](https://sindresorhus.com)
-- [Aw Young Qingzhuo](https://github.com/veniversum)
+- [Dušan Simić](https://github.com/dusansimic)
+- [Lefteris Garyfalakis](https://github.com/lefterisgar)
+- [Michael Quevillon](https://github.com/mquevill)
+- [Nikolas Spiridakis](https://github.com/1nikolas)
+
+**Former**
+
 - [Jarek Radosz](https://github.com/CvX)
 
 ## Links
