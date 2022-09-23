@@ -15,9 +15,8 @@ import {sendAction, showRestartDialog, getWindow, toggleTrayIcon, toggleLaunchMi
 import {generateSubmenu as generateEmojiSubmenu} from './emoji';
 import {toggleMenuBarMode} from './menu-bar-mode';
 import {caprineIconPath} from './constants';
-import {INewDesign} from './types';
 
-export default async function updateMenu({isNewDesign}: INewDesign): Promise<Menu> {
+export default async function updateMenu(): Promise<Menu> {
 	const newConversationItem: MenuItemConstructorOptions = {
 		label: 'New Conversation',
 		accelerator: 'CommandOrControl+N',
@@ -71,7 +70,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 			async click() {
 				config.set('vibrancy', 'none');
 				sendAction('update-vibrancy');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 		{
@@ -81,7 +80,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 			async click() {
 				config.set('vibrancy', 'sidebar');
 				sendAction('update-vibrancy');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 		{
@@ -91,7 +90,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 			async click() {
 				config.set('vibrancy', 'full');
 				sendAction('update-vibrancy');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 	];
@@ -104,7 +103,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 			async click() {
 				config.set('theme', 'system');
 				sendAction('set-theme');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 		{
@@ -114,7 +113,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 			async click() {
 				config.set('theme', 'light');
 				sendAction('set-theme');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 		{
@@ -124,7 +123,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 			async click() {
 				config.set('theme', 'dark');
 				sendAction('set-theme');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 	];
@@ -137,7 +136,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 			async click() {
 				config.set('sidebar', 'default');
 				sendAction('update-sidebar');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 		{
@@ -149,7 +148,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 				// Toggle between default and hidden
 				config.set('sidebar', config.get('sidebar') === 'hidden' ? 'default' : 'hidden');
 				sendAction('update-sidebar');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 		{
@@ -159,7 +158,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 			async click() {
 				config.set('sidebar', 'narrow');
 				sendAction('update-sidebar');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 		{
@@ -169,7 +168,7 @@ export default async function updateMenu({isNewDesign}: INewDesign): Promise<Men
 			async click() {
 				config.set('sidebar', 'wide');
 				sendAction('update-sidebar');
-				await updateMenu({isNewDesign});
+				await updateMenu();
 			},
 		},
 	];
@@ -211,29 +210,8 @@ This is the custom styles file where you can add anything you want.
 The styles here will be injected into Caprine and will override default styles.
 If you want to disable styles but keep the config, just comment the lines that you don't want to be used.
 
-Here are some dark mode color variables to get you started.
-Edit them to change color scheme of Caprine.
 Press Command/Ctrl+R in Caprine to see your changes.
 */
-
-:root {
-	--base: #000;
-	--base-ninety: rgba(255, 255, 255, 0.9);
-	--base-seventy-five: rgba(255, 255, 255, 0.75);
-	--base-seventy: rgba(255, 255, 255, 0.7);
-	--base-fifty: rgba(255, 255, 255, 0.5);
-	--base-fourty: rgba(255, 255, 255, 0.4);
-	--base-thirty: rgba(255, 255, 255, 0.3);
-	--base-twenty: rgba(255, 255, 255, 0.2);
-	--base-five: rgba(255, 255, 255, 0.05);
-	--base-ten: rgba(255, 255, 255, 0.1);
-	--base-nine: rgba(255, 255, 255, 0.09);
-	--container-color: #323232;
-	--container-dark-color: #1e1e1e;
-	--list-header-color: #222;
-	--blue: #0084ff;
-	--selected-conversation-background: linear-gradient(hsla(209, 110%, 45%, 0.9), hsla(209, 110%, 42%, 0.9));
-}
 `;
 
 				if (!existsSync(filePath)) {
@@ -255,7 +233,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 		},
 		{
 			label: 'Emoji Style',
-			submenu: await generateEmojiSubmenu({isNewDesign}, updateMenu),
+			submenu: await generateEmojiSubmenu(updateMenu),
 		},
 		{
 			label: 'Bounce Dock on Message',
@@ -297,7 +275,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			visible: is.development,
 			checked: config.get('notificationsMuted'),
 			click() {
-				sendAction('toggle-mute-notifications', {isNewDesign});
+				sendAction('toggle-mute-notifications');
 			},
 		},
 		{
@@ -473,21 +451,21 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			label: 'Reset Text Size',
 			accelerator: 'CommandOrControl+0',
 			click() {
-				sendAction('zoom-reset', {isNewDesign});
+				sendAction('zoom-reset');
 			},
 		},
 		{
 			label: 'Increase Text Size',
 			accelerator: 'CommandOrControl+Plus',
 			click() {
-				sendAction('zoom-in', {isNewDesign});
+				sendAction('zoom-in');
 			},
 		},
 		{
 			label: 'Decrease Text Size',
 			accelerator: 'CommandOrControl+-',
 			click() {
-				sendAction('zoom-out', {isNewDesign});
+				sendAction('zoom-out');
 			},
 		},
 		{
@@ -529,13 +507,13 @@ Press Command/Ctrl+R in Caprine to see your changes.
 
 					if (result.response === 0) {
 						config.set('privateMode', !config.get('privateMode'));
-						sendAction('set-private-mode', isNewDesign);
+						sendAction('set-private-mode');
 					} else if (result.response === 1) {
 						menuItem.checked = false;
 					}
 				} else {
 					config.set('privateMode', !config.get('privateMode'));
-					sendAction('set-private-mode', isNewDesign);
+					sendAction('set-private-mode');
 				}
 			},
 		},
@@ -576,13 +554,6 @@ Press Command/Ctrl+R in Caprine to see your changes.
 				sendAction('show-hidden-threads-view');
 			},
 		},
-		{
-			label: 'Toggle Unread Threads',
-			visible: !isNewDesign,
-			click() {
-				sendAction('toggle-unread-threads-view');
-			},
-		},
 	];
 
 	const spellCheckerSubmenu: MenuItemConstructorOptions[] = getSpellCheckerLanguages();
@@ -594,7 +565,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			visible: is.development,
 			accelerator: 'CommandOrControl+Shift+M',
 			click() {
-				sendAction<INewDesign>('mute-conversation', {isNewDesign});
+				sendAction('mute-conversation');
 			},
 		},
 		{
@@ -603,7 +574,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			visible: is.development,
 			accelerator: 'CommandOrControl+Shift+H',
 			click() {
-				sendAction<INewDesign>('hide-conversation', {isNewDesign});
+				sendAction('hide-conversation');
 			},
 		},
 		{
@@ -612,7 +583,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			visible: is.development,
 			accelerator: 'CommandOrControl+Shift+D',
 			click() {
-				sendAction<INewDesign>('delete-conversation', {isNewDesign});
+				sendAction('delete-conversation');
 			},
 		},
 		{
@@ -646,7 +617,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			visible: is.development,
 			accelerator: 'CommandOrControl+F',
 			click() {
-				sendAction('search', isNewDesign);
+				sendAction('search');
 			},
 		},
 		{
