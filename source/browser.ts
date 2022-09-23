@@ -755,25 +755,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 	observeThemeBugs();
 
 	// custom
-	var focusOnClick = function (element) {
-		if (element == null || element.dataset.bound) {
-			return;
-		}
-		element.dataset.bound = true;
-		element.addEventListener('click', function (e) {
-			if (e.target.childNodes.length > 0) {
-				return;
-			}
-			document.querySelector('[contenteditable="true"]').focus();
-		});
-	};
 	var observer = new MutationObserver(function () {
-		// emoticons focus after click
-		document.querySelectorAll('img._5zft.img').forEach(function (element) {
-			focusOnClick(element);
-		});
+		// fix hidden image preview
+		var target = document.documentElement;
+		if (target.classList.contains('hide-preferences-window')) {
+			target.classList.remove('hide-preferences-window');
+		}
 	});
-	observer.observe(document.body, {childList: true, subtree: true});
+	observer.observe(document.documentElement, {attributes: true, childList: true, subtree: true});
 });
 
 // Handle title bar double-click.
