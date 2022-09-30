@@ -370,7 +370,9 @@ function createMainWindow(): BrowserWindow {
 	});
 
 	win.on('app-command', (_event, command) => {
+		console.log('app-command: ' + command)
 		if (command === 'close') {
+			tray.destroy();
 			app.quit();
 		} else if (command === 'browser-refresh') {
 			win.reload();
