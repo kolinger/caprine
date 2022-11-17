@@ -2,19 +2,12 @@
 import {ipcRenderer as ipc} from 'electron-better-ipc';
 import {api, is} from 'electron-util';
 import elementReady = require('element-ready');
+import {nativeTheme} from '@electron/remote';
 import selectors from './browser/selectors';
 import config from './config';
 import {toggleVideoAutoplay} from './autoplay';
 import {sendConversationList} from './browser/conversation-list';
 import {IToggleSounds} from './types';
-
-const {nativeTheme} = require('@electron/remote');
-
-const selectedConversationNewDesign = '[role=navigation] [role=grid] [role=row] [role=gridcell] [role=link][aria-current]';
-const preferencesSelector = '._10._4ebx.uiLayer._4-hy';
-const preferencesSelectorNewDesign = 'div[class="bdao358l om3e55n1 g4tp4svg"] > div:nth-of-type(3) > div';
-const messengerSoundsSelector = `${preferencesSelector} ._374d ._6bkz`;
-const conversationMenuSelectorNewDesign = '[role=menu]';
 
 async function withMenu(
 	menuButtonElement: HTMLElement,
@@ -47,9 +40,23 @@ async function withMenu(
 	await callback();
 }
 
+async function isNewSidebar(): Promise<boolean> {
+	await elementReady('[role=navigation] > div > div');
+
+	const sidebars = document.querySelectorAll<HTMLElement>('[role=navigation] > div > div');
+
+	return sidebars.length === 2;
+}
+
 async function withSettingsMenu(callback: () => Promise<void> | void): Promise<void> {
-	// If ui is new, get the new settings menu
-	const settingsMenu = (await elementReady<HTMLElement>(selectors.userMenu, {stopOnDomReady: false}))!;
+	const newSidebar = await isNewSidebar();
+
+	// Wait for navigation pane buttons to show up
+	await elementReady(newSidebar ? selectors.userMenuNewSidebar : selectors.userMenu, {stopOnDomReady: false});
+
+	const settingsMenu = newSidebar
+		? document.querySelectorAll<HTMLElement>(selectors.userMenuNewSidebar)[0]
+		: document.querySelector<HTMLElement>(selectors.userMenu)!;
 
 	await withMenu(settingsMenu, callback);
 }
@@ -58,10 +65,10 @@ async function selectMenuItem(itemNumber: number): Promise<void> {
 	let selector;
 
 	// Wait for menu to show up
-	await elementReady(conversationMenuSelectorNewDesign, {stopOnDomReady: false});
+	await elementReady(selectors.conversationMenuSelectorNewDesign, {stopOnDomReady: false});
 
 	const items = document.querySelectorAll<HTMLElement>(
-		`${conversationMenuSelectorNewDesign} [role=menuitem]`,
+		`${selectors.conversationMenuSelectorNewDesign} [role=menuitem]`,
 	);
 
 	// Negative items will select from the end
@@ -106,7 +113,7 @@ ipc.answerMain('new-conversation', async () => {
 });
 
 ipc.answerMain('new-room', async () => {
-	document.querySelector<HTMLElement>('.qi72231t.nu7423ey.tav9wjvu.flwp5yud.tghlliq5.gkg15gwv.s9ok87oh.s9ljgwtm.lxqftegz.bf1zulr9.fsf7x5fv.tgm57n0e.jez8cy9q.s5oniofx.m8h3af8h.l7ghb35v.kjdc1dyq.kmwttqpk.dnr7xe2t.aeinzg81.cr00lzj9.rn8ck1ys.s3jn8y49.g4tp4svg.jl2a5g8c.f14ij5to.l3ldwz01.icdlwmnq.g90fjkqk.jvc6uz2b.bdao358l.alzwoclg.i85zmo3j.jcxyg2ei.srn514ro.oxkhqvkx.rl78xhln.nch0832m.om3e55n1.qmqpeqxj.e7u6y3za.qwcclf47.nmlomj2f.frfouenu.bonavkto.djs4p424.r7bn319e')!.click();
+	document.querySelector<HTMLElement>('.x16n37ib .x1i10hfl.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x1ypdohk.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.x16tdsg8.x1hl2dhg.xggy1nq.x87ps6o.x1lku1pv.x1a2a7pz.x6s0dn4.x14yjl9h.xudhj91.x18nykt9.xww2gxu.x972fbf.xcfux6l.x1qhh985.xm0m39n.x9f619.x78zum5.xl56j7k.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x1n2onr6.xc9qbxq.x14qfxbe.x1qhmfi1')!.click();
 });
 
 ipc.answerMain('log-out', async () => {
@@ -141,13 +148,13 @@ async function openSearchInConversation() {
 		document.querySelector<HTMLElement>('.j9ispegn.pmk7jnqg.k4urcfbm.datstx6m.b5wmifdl.kr520xx4.mdpwds66.b2cqd1jy.n13yt9zj.eh67sqbx')?.click();
 	}
 
-	await elementReady<HTMLElement>(selectors.rightSidebarSegments, {stopOnDomReady: false});
+	await elementReady(selectors.rightSidebarSegments, {stopOnDomReady: false});
 	const segments = document.querySelectorAll<HTMLElement>(selectors.rightSidebarSegments).length;
 	// If there are three segmetns in right sidebar (two users chat) then button index is 4
 	// If there are not three segments (usually four, it's a group chat) then button index is 6
 	const buttonIndex = segments === 3 ? 4 : 6;
 
-	await elementReady<HTMLElement>(selectors.rightSidebarButtons, {stopOnDomReady: false});
+	await elementReady(selectors.rightSidebarButtons, {stopOnDomReady: false});
 	const buttonList = document.querySelectorAll<HTMLElement>(selectors.rightSidebarButtons);
 
 	if (buttonList.length > buttonIndex) {
@@ -179,19 +186,19 @@ ipc.answerMain('search', () => {
 });
 
 ipc.answerMain('insert-gif', () => {
-	document.querySelector<HTMLElement>('.om3e55n1.cgu29s5g > div:nth-child(3) > span > div')!.click();
+	document.querySelector<HTMLElement>('.x1n2onr6.x1iyjqo2.xw2csxc > div:nth-child(3) > span > div')!.click();
 });
 
 ipc.answerMain('insert-emoji', async () => {
-	document.querySelector<HTMLElement>('.om3e55n1.cgu29s5g > div:nth-child(5) > span > div')!.click();
+	document.querySelector<HTMLElement>('.x1n2onr6.x1iyjqo2.xw2csxc > div:nth-child(5) > span > div')!.click();
 });
 
 ipc.answerMain('insert-sticker', () => {
-	document.querySelector<HTMLElement>('.om3e55n1.cgu29s5g > div:nth-child(2) > span > div')!.click();
+	document.querySelector<HTMLElement>('.x1n2onr6.x1iyjqo2.xw2csxc > div:nth-child(2) > span > div')!.click();
 });
 
 ipc.answerMain('attach-files', () => {
-	document.querySelector<HTMLElement>('.om3e55n1.cgu29s5g > div:nth-child(1) > span > div')!.click();
+	document.querySelector<HTMLElement>('.x1n2onr6.x1iyjqo2.xw2csxc > div:nth-child(1) > span > div')!.click();
 });
 
 ipc.answerMain('focus-text-input', () => {
@@ -227,7 +234,7 @@ async function openHiddenPreferences(): Promise<boolean> {
 
 		const style = document.createElement('style');
 		// Hide both the backdrop and the preferences dialog
-		style.textContent = `${preferencesSelector} ._3ixn, ${preferencesSelector} ._59s7 { opacity: 0 !important }`;
+		style.textContent = `${selectors.preferencesSelector} ._3ixn, ${selectors.preferencesSelector} ._59s7 { opacity: 0 !important }`;
 		document.body.append(style);
 
 		await openPreferences();
@@ -241,7 +248,7 @@ async function openHiddenPreferences(): Promise<boolean> {
 async function toggleSounds({checked}: IToggleSounds): Promise<void> {
 	const shouldClosePreferences = await openHiddenPreferences();
 
-	const soundsCheckbox = document.querySelector<HTMLInputElement>(messengerSoundsSelector)!;
+	const soundsCheckbox = document.querySelector<HTMLInputElement>(`${selectors.preferencesSelector} ${selectors.messengerSoundsSelector}`)!;
 	if (typeof checked === 'undefined' || checked !== soundsCheckbox.checked) {
 		soundsCheckbox.click();
 	}
@@ -353,13 +360,13 @@ async function observeTheme(): Promise<void> {
 	});
 
 	/* Observe only elements where new nodes may need dark mode */
-	const menuElements = await elementReady<HTMLElement>('.j83agx80.cbu4d94t.l9j0dhe7.jgljxmt5.be9z9djy > div:nth-of-type(2) > div', {stopOnDomReady: false});
+	const menuElements = await elementReady('.j83agx80.cbu4d94t.l9j0dhe7.jgljxmt5.be9z9djy > div:nth-of-type(2) > div', {stopOnDomReady: false});
 	if (menuElements) {
 		observerNew.observe(menuElements, {childList: true});
 	}
 
 	// Attribute notation needed here to guarantee exact (not partial) match.
-	const modalElements = await elementReady<HTMLElement>(preferencesSelectorNewDesign, {stopOnDomReady: false});
+	const modalElements = await elementReady(selectors.preferencesSelector, {stopOnDomReady: false});
 	if (modalElements) {
 		observerNew.observe(modalElements, {childList: true});
 	}
@@ -410,6 +417,7 @@ function updateSidebar(): void {
 	}
 }
 
+// TODO: Implement this function
 async function updateDoNotDisturb(): Promise<void> {
 	const shouldClosePreferences = await openHiddenPreferences();
 
@@ -522,7 +530,7 @@ async function jumpToConversation(key: number): Promise<void> {
 
 // Focus on the conversation with the given index
 async function selectConversation(index: number): Promise<void> {
-	const list = await elementReady<HTMLElement>(selectors.conversationList, {stopOnDomReady: false});
+	const list = await elementReady(selectors.conversationList, {stopOnDomReady: false});
 
 	if (!list) {
 		console.error('Could not find conversations list', selectors.conversationList);
@@ -540,7 +548,7 @@ async function selectConversation(index: number): Promise<void> {
 }
 
 function selectedConversationIndex(offset = 0): number {
-	const selected = document.querySelector<HTMLElement>(selectedConversationNewDesign);
+	const selected = document.querySelector<HTMLElement>(selectors.selectedConversation);
 
 	if (!selected) {
 		return -1;
@@ -563,7 +571,7 @@ function setZoom(zoomFactor: number): void {
 async function withConversationMenu(callback: () => void): Promise<void> {
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	let menuButton: HTMLElement | null = null;
-	const conversation = document.querySelector<HTMLElement>(`${selectedConversationNewDesign}`)?.parentElement?.parentElement?.parentElement?.parentElement;
+	const conversation = document.querySelector<HTMLElement>(`${selectors.selectedConversation}`)?.parentElement?.parentElement?.parentElement?.parentElement;
 
 	menuButton = conversation?.querySelector('[aria-label=Menu][role=button]') ?? null;
 
@@ -586,7 +594,7 @@ This function assumes:
 In other words, you should only use this function within a callback that is provided to `withConversationMenu()`, because `withConversationMenu()` makes sure to have the conversation menu open before executing the callback and closes the conversation menu afterwards.
 */
 function isSelectedConversationGroup(): boolean {
-	return Boolean(document.querySelector<HTMLElement>(`${conversationMenuSelectorNewDesign} [role=menuitem]:nth-child(4)`));
+	return Boolean(document.querySelector<HTMLElement>(`${selectors.conversationMenuSelectorNewDesign} [role=menuitem]:nth-child(4)`));
 }
 
 async function hideSelectedConversation(): Promise<void> {
@@ -608,7 +616,7 @@ async function openPreferences(): Promise<void> {
 		selectMenuItem(1);
 	});
 
-	await elementReady<HTMLElement>(preferencesSelectorNewDesign, {stopOnDomReady: false});
+	await elementReady(selectors.preferencesSelector, {stopOnDomReady: false});
 }
 
 function isPreferencesOpen(): boolean {
@@ -616,9 +624,6 @@ function isPreferencesOpen(): boolean {
 }
 
 async function closePreferences(): Promise<void> {
-	const closeButton = await elementReady<HTMLElement>(selectors.closePreferencesButton, {stopOnDomReady: false});
-	closeButton?.click();
-
 	// Wait for the preferences window to be closed, then remove the class from the document
 	const preferencesOverlayObserver = new MutationObserver(records => {
 		const removedRecords = records.filter(({removedNodes}) => removedNodes.length > 0 && (removedNodes[0] as HTMLElement).tagName === 'DIV');
@@ -630,9 +635,12 @@ async function closePreferences(): Promise<void> {
 		}
 	});
 
-	const preferencesOverlay = document.querySelector(preferencesSelectorNewDesign)!;
+	const preferencesOverlay = document.querySelector(selectors.preferencesSelector)!;
 
 	preferencesOverlayObserver.observe(preferencesOverlay, {childList: true});
+
+	const closeButton = await elementReady<HTMLElement>(selectors.closePreferencesButton, {stopOnDomReady: false});
+	closeButton?.click();
 }
 
 function insertionListener(event: AnimationEvent): void {
@@ -642,7 +650,7 @@ function insertionListener(event: AnimationEvent): void {
 }
 
 async function observeAutoscroll(): Promise<void> {
-	const mainElement = await elementReady<HTMLElement>('._4sp8', {stopOnDomReady: false});
+	const mainElement = await elementReady('._4sp8', {stopOnDomReady: false});
 	if (!mainElement) {
 		return;
 	}
@@ -659,7 +667,7 @@ async function observeAutoscroll(): Promise<void> {
 	};
 
 	const hookMessageObserver = async (): Promise<void> => {
-		const chatElement = await elementReady<HTMLElement>(
+		const chatElement = await elementReady(
 			'[role=presentation] .scrollable [role = region] > div[id ^= "js_"]', {stopOnDomReady: false},
 		);
 
