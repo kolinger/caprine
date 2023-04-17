@@ -3,6 +3,7 @@ yarn.lock
 /dist
 /dist-js
 mas.provisionprofile
+.vscode
 
 build.cmd
 deploy.cmd
