@@ -4,6 +4,6 @@ yarn.lock
 /dist-js
 mas.provisionprofile
 .vscode
+.DS_store
 
-build.cmd
-deploy.cmd
+/*.cmd
