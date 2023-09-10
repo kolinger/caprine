@@ -404,7 +404,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			/* TODO: Fix notifications */
 			label: 'Flash Window on Message',
 			type: 'checkbox',
-			visible: is.development,
+			//visible: is.development,
 			checked: config.get('flashWindowOnMessage'),
 			click(menuItem) {
 				config.set('flashWindowOnMessage', menuItem.checked);
