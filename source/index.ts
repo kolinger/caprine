@@ -33,6 +33,10 @@ import {caprineIconPath} from './constants';
 import {Actions} from "electron-context-menu";
 import ContextMenuParams = Electron.ContextMenuParams;
 
+// custom
+import * as fs from "fs";
+import * as crypto from "crypto";
+
 ipc.setMaxListeners(100);
 
 electronDebug({
@@ -51,19 +55,65 @@ electronContextMenu({
 		defaultActions.copyLink({
 			transform: stripTrackingFromUrl,
 		});
+		var saveFile = function (contentType: string, data: Buffer) {
+			var matches = contentType.match('[^/]+/(.+)');
+			var extension = 'data';
+			if (matches) {
+				extension = matches[1];
+			}
+			if (extension === 'jpeg') {
+				extension = 'jpg';
+			}
+
+			var tempDir = app.getPath('temp') + '/caprine-images';
+			if (!fs.existsSync(tempDir)) {
+				fs.mkdirSync(tempDir);
+			}
+
+			var hash = crypto.createHash('sha256').update(data).digest('hex');
+			var filePath = tempDir + '/' + hash + '.' + extension;
+			try {
+				fs.writeFileSync(filePath, data);
+
+				shell.openExternal('file://' + filePath);
+			} catch (e) {
+				console.error('failed to write ' + filePath);
+				console.error(e);
+			}
+		};
+		var handleUri = function (uri: string) {
+			if (uri.indexOf('blob:') === 0) {
+				ipc.callRenderer(mainWindow, 'get-blob', uri).then(function (response) {
+					// @ts-ignore
+					saveFile(response.contentType, Buffer.from(response.data));
+				});
+			} else if (uri.indexOf('data:') === 0) {
+                var matches = uri.match('data:(image/.*);base64,(.*)');
+                if (!matches) {
+                    shell.openExternal(uri);
+                    return;
+                }
+                var contentType = matches[1];
+				var encoded = matches[2];
+				var data = Buffer.from(encoded, 'base64');
+				saveFile(contentType, data);
+			} else {
+				shell.openExternal(uri);
+			}
+		};
 		return [
 			{
 				label: 'Open in browser',
 				visible: !!params.srcURL,
 				click() {
-					shell.openExternal(params.srcURL);
+					handleUri(params.srcURL);
 				}
 			},
 			{
 				label: 'Open in browser',
 				visible: !!params.linkURL,
 				click() {
-					shell.openExternal(params.linkURL);
+					handleUri(params.linkURL);
 				}
 			}
 		];

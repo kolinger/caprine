@@ -961,3 +961,17 @@ ipc.answerMain('notification-reply-callback', async (data: any) => {
 	data.previousConversation = previousConversation;
 	window.postMessage({type: 'notification-reply-callback', data}, '*');
 });
+
+ipc.answerMain('get-blob', async (data: string) => {
+	try {
+		return await fetch(data).then(async function (response) {
+			var data = await response.arrayBuffer();
+			return {
+				contentType: response.headers.get('content-type')?.toString(),
+				data: data
+			};
+		});
+	} catch (e) {
+		return e;
+	}
+});
