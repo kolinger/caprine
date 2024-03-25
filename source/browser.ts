@@ -969,3 +969,12 @@ ipc.answerMain('get-blob', async (data: string) => {
 		return e;
 	}
 });
+
+window.addEventListener('keydown', function (e) {
+	if (e.ctrlKey || e.altKey || e.metaKey) {
+		return;
+	}
+	if (document.activeElement.getAttribute('role') !== 'textbox') {
+		document.querySelector('[role="textbox"]').focus();
+	}
+});
