@@ -971,7 +971,13 @@ ipc.answerMain('get-blob', async (data: string) => {
 });
 
 window.addEventListener('keydown', function (e) {
-	if (e.ctrlKey || e.altKey || e.metaKey) {
+	if (!document.activeElement) {
+		return;
+	}
+	if (e.ctrlKey || e.altKey || e.metaKey || e.code === 'Escape') {
+		return;
+	}
+	if (['INPUT', 'TEXTAREA'].indexOf(document.activeElement.tagName) !== -1) {
 		return;
 	}
 	if (document.activeElement.getAttribute('role') !== 'textbox') {
