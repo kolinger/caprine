@@ -2,7 +2,7 @@
 %global _build_id_links alldebug
 
 Name:           caprine
-Version:        2.59.1
+Version:        2.60.1
 Release:        1%{?dist}
 Summary:        Elegant Facebook Messenger desktop app
 
@@ -11,9 +11,9 @@ URL:            https://sindresorhus.com/caprine/
 Source0:        https://github.com/sindresorhus/caprine/archive/refs/tags/v%{version}.tar.gz
 Source1:        %{name}.desktop
 
-BuildArch:      x86_64
+ExclusiveArch:  x86_64
 BuildRequires:  npm
-BuildRequires:  nodejs >= 18.0.0
+BuildRequires:  nodejs >= 20.0.0
 
 %description
 Caprine is an unofficial and privacy-focused Facebook Messenger app with many useful features.
@@ -57,6 +57,14 @@ install -Dm644 license %{buildroot}%{_datadir}/licenses/%{name}
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
+* Wed Apr  3 2024 dusansimic <dusan.simic1810@gmail.com> - 2.60.1-1
+- Code refactoring
+* Tue Feb 20 2024 dusansimic <dusan.simic1810@gmail.com> - 2.59.3-1
+- Fix blank window
+- Fix try icon
+* Mon Feb 19 2024 dusansimic <dusan.simic1810@gmail.com> - 2.59.2-1
+- Hidden dialog issue Fix
+- Update Messenger for Mac/Windows selectors
 * Wed Oct 11 2023 dusansimic <dusan.simic1810@gmail.com> - 2.59.1-1
 - Release 2.59.1
 * Wed Sep 27 2023 dusansimic <dusan.simic1810@gmail.com> - 2.59.0-1

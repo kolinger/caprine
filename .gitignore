@@ -5,5 +5,6 @@ yarn.lock
 mas.provisionprofile
 .vscode
 .DS_store
+/.devcontainer
 
 /*.cmd

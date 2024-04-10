@@ -54,11 +54,11 @@ function disableVideoAutoplay(videos: NodeListOf<HTMLVideoElement>): void {
 		} = firstParent;
 
 		const style = parentWithBackground.style || window.getComputedStyle(parentWithBackground);
-		const backgroundImageSrc = style.backgroundImage.slice(4, -1).replace(/"/g, '');
+		const backgroundImageSource = style.backgroundImage.slice(4, -1).replaceAll(/"/, '');
 
 		// Create the image to replace the video as a placeholder
 		const image = document.createElement('img');
-		image.setAttribute('src', backgroundImageSrc);
+		image.setAttribute('src', backgroundImageSource);
 		image.classList.add('disabledAutoPlayImgTopRadius');
 
 		// If it's a video without a source title bar at the bottom,
@@ -139,9 +139,7 @@ const conversationDivObserver = new MutationObserver(_ => {
 	let conversation = document.querySelector(`#${conversationId}`);
 
 	// Fetch it using `querySelector` if no luck with the `conversationId`
-	if (!conversation) {
-		conversation = document.querySelector(selectors.conversationSelector);
-	}
+	conversation ||= document.querySelector(selectors.conversationSelector);
 
 	// If we have a new reference
 	if (conversation && conversationWindow !== conversation) {
